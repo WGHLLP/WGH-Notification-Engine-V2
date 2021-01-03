@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace WGH_Notification_Engine
 {
@@ -19,7 +20,7 @@ namespace WGH_Notification_Engine
 
         }
         public string PeopleToContact; // List of people to contact with a message (At least one mandatory)
-        public int FromUserID; // User ID for the person that is sending the message (Mandatory). If userid = "0" then SYSTEM sent the message.
+        public int msgFromUserID; // User ID for the person that is sending the message (Mandatory). If userid = "0" then SYSTEM sent the message.
         public int MessageType; // They type of message that is being sent (Mandatory):
                                 // 1.	Custom message(must provide message text)
                                 // 2.	New user invite
@@ -31,14 +32,16 @@ namespace WGH_Notification_Engine
                                 // 8.	Player accepts game(notify manager) & player wants to share game – perhaps this is two calls to the module from the instigating routine.
                                 // 9.	Manager cancels game – notify player(s)
         public string MessageText; // Free form text that will be used (Mandatory for custom messages)
-        public int GameID; // ID for the game information stored on file. Only required when game info needed.
-        public int MessagePriority; // The priority of the message will determinte the type of message sent.
-                                    // Lower priority messages will be included. I.e Pri 1 will include Popup, Toast & In-App messsge (Mandatory). 
-                                    // 1.   Popup
-                                    // 2.   Toast - Red circle notification on app icon
-                                    // 3.   In-App message
-// Testing Github
-        public string NotificationMessage(string PeopleToContact, int FromUserID, int MessageType, string MessageText, int GameID, int MessagePriority)
+        public int msgGameID; // ID for the game information stored on file. Only required when game info needed.
+        public int msgPriority; // The priority of the message will determinte the type of message sent.
+                                // Lower priority messages will be included. I.e Pri 1 will include Popup, Toast & In-App messsge (Mandatory). 
+                                // 1.   Popup
+                                // 2.   Toast - Red circle notification on app icon
+                                // 3.   In-App message
+
+
+
+        public string NotificationMessage(string PeopleToContact, int msgFromUserID, int msgType, string MessageText, int msgGameID, int msgPriority)
         {
             // We need to loop through each person that is due to receive the message.
             // People to contact can be multiple users with comma seperators.
@@ -50,10 +53,8 @@ namespace WGH_Notification_Engine
 
             // This code splits the entry in to seperate elements of an array.
             string[] peopleToContactArray;
-      
-
-
             peopleToContactArray = PeopleToContact.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
 
             var message = new StringBuilder();
 
@@ -65,182 +66,158 @@ namespace WGH_Notification_Engine
                 string[] contactTypeArray;
                 contactTypeArray = personToContact.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 string contactType = contactTypeArray[0].ToUpper();
-                string contactDetails = contactTypeArray[1];
+                string msgTo = contactTypeArray[1];
                 bool addToUser = true;
-                switch (MessageType)
+
+
+                // Setup variables ready to write to DB
+
+                string msgBody;
+
+
+                switch (msgType)
                 {
                     case 1: // Custom Message
-
-                        message.AppendLine("This is a custom message (type 1)");
-                        message.AppendLine("Message Text : " + MessageText);
+                        msgBody = MessageText;
                         break;
-
                     case 2: // New User Invite.
-                        message.AppendLine("New User Invite (type 2)");
-                        message.AppendLine("Message Text : You have been invited to join.");
+                        msgBody = "You have been invited to join.";
                         break;
-
                     case 3: // Share on social Media
-                            // do this
-                        message.AppendLine("User " + FromUserID + " has decided to share game " + GameID + " on social media.");
+                        msgBody = "User " + msgFromUserID + " has decided to share game " + msgGameID + " on social media.";
                         addToUser = false;
                         break;
-
                     case 4: // Share game info to existing user
-                        message.AppendLine("This is a game available message (type 4)");
-                        if (FromUserID == 0)
+                        if (msgFromUserID == 0)
                         {
-                            message.AppendLine("SYSTEM generated message : A game is available that matches your requirements. See game " + GameID);
+                            msgBody = "SYSTEM generated : A game is available that matches your requirements. See game " + msgGameID;
                         }
                         else
                         {
-                            message.AppendLine("Message Text : A game is available that matches your requirements. See game " + GameID + " from User " + FromUserID);
+                            msgBody = "A game is available that matches your requirements. See game " + msgGameID + " from User " + msgFromUserID;
                         }
                         break;
 
                     case 5: // Player cancels their acceptance to play
-
-                        message.AppendLine("Player Cancels and acceptance (type 5)");
-                        message.AppendLine("Message Text : Player " + FromUserID + " has cancelled invite to game " + GameID + " they previously accepted.");
+                        msgBody = "Player " + msgFromUserID + " has cancelled invite to game " + msgGameID + " they previously accepted.";
                         break;
-
                     case 6: // Ask player if they want to add player to friend list.
-                        message.AppendLine("Ask player if they want to add user to friend list. (type 6)");
-                        message.AppendLine("Message Text : Do you want to add player to your friend list.");
-                        // do this
+                        msgBody = "Do you want to add player to your friend list.";
                         break;
                     case 7: // Player accepts game - let manager know
-                        message.AppendLine("Player has accepted a game. (type 7)");
-                        message.AppendLine("Message Text : Player " + FromUserID + " has accepted game - " + GameID);
+                        msgBody = "Player " + msgFromUserID + " has accepted game - " + msgGameID;
                         break;
                     case 8: // Player accepts game - let manager know & player wants to share on social media
-                        message.AppendLine("Player has accepted a game & social media post (type 8)");
-                        message.AppendLine("Message Text : Player " + FromUserID + " has accepted game - " + GameID + " and has chosen to post on social media.");
-                        // do this
+                        msgBody = "Player " + msgFromUserID + " has accepted game - " + msgGameID + " and has chosen to post on social media.";
                         break;
                     case 9: // Manager cancels game - notify player(s)
-                        message.AppendLine("Manager cancels a game. (type 9)");
-                        message.AppendLine("Message Text : Manager " + FromUserID + " has canceled the game " + GameID);
-                        // do this
+                        msgBody = "Manager " + msgFromUserID + " has canceled the game " + msgGameID;
                         break;
                     default: // This should not occur and is an error - use exception catching.
-                        message.AppendLine("Error - Message type does not exist (type " + MessageType + ")");
-                        message.AppendLine("Message Text : Message type does not exist.");
+                        msgBody = "Message type does not exist.";
                         addToUser = false;
-                        // do this
                         break;
                 }
 
+                int msgMode = 0;
 
                 if (addToUser)
                 {
-                    message.Append("Sent to user : " + contactDetails);
+                    message.Append("Sent to user : " + msgTo);
 
                     // What type of contact will we make. Phone, e-mail or app messaging.
 
                     switch (contactType)
                     {
                         case "EMAIL":
-                            message.AppendLine(" using : EMAIL");
-
+                            msgMode = 1;
                             // See here on how to send an automated e-mail
                             // https://www.c-sharpcorner.com/article/sending-email-using-c-sharp/
-
                             break;
 
                         case "TEXT":
-                            message.AppendLine(" using : TEXT");
-
+                            msgMode = 2;
                             // see here how to send an automated text message
                             // https://www.c-sharpcorner.com/article/send-text-message-to-cell-phones-from-a-C-Sharp-application/
-
                             break;
 
                         case "APP":
-                            message.AppendLine(" using : APP");
+                            msgMode = 3;
                             break;
 
                         default:
-                            message.AppendLine(" using : APP - no method selected for sending defaults to APP.");
+                            msgMode = 3;
                             break;
 
                     }
                 }
-                    message.AppendLine("From User : " + FromUserID);
-                    switch (MessagePriority)
-                    {
-                        case 1: // Popup message, Toast & in app message
-                            message.AppendLine("Message Priority : 1");
-                            message.AppendLine("Pop up Message - NOT Delivered");
-                            message.AppendLine("Toast Message - NOT Delivered");
-                            message.AppendLine("In App message - NOT delivered");
-                            break;
-                        case 2: // Toast - red circle notification & in app message
-                            message.AppendLine("Message Priority : 2");
-                            message.AppendLine("Toast Message - NOT Delivered");
-                            message.AppendLine("In App message - NOT delivered");
-                        break;
-                        case 3: // In app message only
-                            message.AppendLine("Message Priority : 3");
-                            message.AppendLine("In App message - NOT delivered");
-                        break;
-                        default:
-                            message.AppendLine("Message Priority : 3 - No message priority selected and defaults to 3");
-                            message.AppendLine("In App message - NOT delivered");
-                        break;
-                    }             
-                // using UTC to ensure consistency accross timezones.
+                else
+                {
+                    msgTo = null;
 
-                message.AppendLine(DateTime.UtcNow.ToString());
+                }
+                if (msgPriority != 1 && msgPriority != 2 && msgPriority != 3) msgPriority = 3;
 
-                string path = @"UserMessages.txt";
-                string fullPath = Path.GetFullPath(path);
+                // using UTC to ensure consistency accross timezones. 
+                string msgDateTime = DateTime.UtcNow.ToString();
 
-
-                SaveAppMessage(message.ToString(), personToContact);
-
-
-                // TODO: This can be deleted once implemented fully with the file structure.
-                message.AppendLine("File : " + fullPath);
-                MessageBox.Show(message.ToString());
-
+                SaveAppMessage(msgType, msgTo, msgBody, msgMode, msgFromUserID, msgPriority, msgDateTime, msgGameID);
+                UpdateDB("insert", 0, msgType, msgBody, msgTo, msgMode, msgFromUserID, msgPriority, msgDateTime, msgGameID);
             }
             return message.ToString();
         }
 
         // Show an in app message only
 
-        public string SaveAppMessage(string messageToSave,string personToContact)
+        public string SaveAppMessage(int msgType, string msgTo, string msgBody, int msgMode, int msgFromUserID, int msgPriority, string msgDateTime, int msgGameID)
         {
-            // open message file & read user record - personToContact will only be used with a DB as a key to a record.
-            // file will need to be created during the installation process. It will be created in the default location "UserMessages.txt"
-
-            string path = @"UserMessages.txt";
-
-            // TODO: Need to check if the file exists before doing anything. If it does not exist, then it needs to be created.
-            try
-            {
-                using (StreamWriter sr = File.AppendText(path))
-                {
-                    sr.WriteLine(messageToSave);
-                    sr.Close();
-                }
-            }
-            catch(System.IO.DirectoryNotFoundException ex)
-            {
-                string message = "Directory Not Found. Create First." + ex;
-                MessageBox.Show(message.ToString());
-            }
-            catch(System.IO.FileNotFoundException ex)
-            {
-                string message = "File Not Found. Create First." + ex;
-                MessageBox.Show(message.ToString());
-            }
-            return messageToSave.ToString();
+            return null;
         }
 
+        public string UpdateDB(string updateType, int msgID, int msgType, string msgBody, string msgTo, int msgMode, int msgFromID, int msgPriority, string msgDateTime, int msgGameID)
+        {
 
-        // Show a an in app message AND a toast notification. (Red circle on app icon).
+            string connectionString = null;
+
+            string ServerName = "subsfc.database.windows.net";
+            string DatabaseName = "SubsFCTest";
+            string UserName = "stephenseed";
+            string Password = "VeA6NPuY4gQ7wYr";
+
+            connectionString = "Data Source=" + ServerName + "; Initial Catalog=" + DatabaseName + ";User ID=" + UserName + ";Password=" + Password + ";";
+            SqlConnection cnn = new SqlConnection(connectionString);
+
+            cnn.Open(); // open database
+            SqlCommand cmd = cnn.CreateCommand();
+            string sql;
+            switch (updateType)
+            {
+                case "insert":
+                    sql = "INSERT INTO Notifications (msgType, msgBody, msgTo, msgMode, msgFromID, msgPriority, msgDateTime, msgGameID) " +
+                "VALUES ('" + msgType + "' , '" + msgBody + "' , '" + msgTo + "' , '" + msgMode + "' , '" + msgFromUserID + "' , '" + msgPriority + "' , '" + msgDateTime + "' , '" + msgGameID + "')";
+                    break;
+                case "update":
+                    sql = "UPDATE.....";
+                    break;
+                case "delete": // Delete - only for GDPR - Admin only.
+                    sql = "DELETE.....";
+                    break;
+                case "read":
+                    sql = "SELECT....";
+                    break;
+                case "archive":
+                    sql = "ARCHIVE";
+                    break;
+                default:
+                    sql = "";
+                    break;
+
+            }
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+            cnn.Close();
+            return null;
+        }
 
         public string SaveAppMessage(string messageToSave)
         {
@@ -254,13 +231,6 @@ namespace WGH_Notification_Engine
 
             return messageToSave.ToString();
         }
-        // Mobile phone Popup message AND in app message AND a toast notification. (Red circle on app icon).
-
-
-
-
-
-
 
         private void btnOK_Click(object sender, EventArgs e)
         {
@@ -269,14 +239,15 @@ namespace WGH_Notification_Engine
             {
                 textBoxSender.Text = "0";
             }
-            FromUserID = int.Parse(textBoxSender.Text);
+            int FromUserID = int.Parse(textBoxSender.Text);
             MessageType = int.Parse(textBoxMessageType.Text);
             MessageText = textBoxMessageText.Text;
-            GameID = int.Parse(textBoxGameID.Text);
-            MessagePriority = int.Parse(textBoxMessagePriority.Text);
+            int GameID = int.Parse(textBoxGameID.Text);
+            int MessagePriority = int.Parse(textBoxMessagePriority.Text);
             NotificationMessage(PeopleToContact, FromUserID, MessageType, MessageText, GameID, MessagePriority);
 
 
         }
     }
 }
+

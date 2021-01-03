@@ -47,110 +47,123 @@
             // lblToPeople
             // 
             this.lblToPeople.AutoSize = true;
-            this.lblToPeople.Location = new System.Drawing.Point(28, 59);
+            this.lblToPeople.Location = new System.Drawing.Point(68, 161);
+            this.lblToPeople.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblToPeople.Name = "lblToPeople";
-            this.lblToPeople.Size = new System.Drawing.Size(276, 15);
+            this.lblToPeople.Size = new System.Drawing.Size(696, 41);
             this.lblToPeople.TabIndex = 0;
             this.lblToPeople.Text = "Who To (Comma Seperated, e-mail, phone, UserID)";
             // 
             // lblSendingUser
             // 
             this.lblSendingUser.AutoSize = true;
-            this.lblSendingUser.Location = new System.Drawing.Point(28, 108);
+            this.lblSendingUser.Location = new System.Drawing.Point(68, 295);
+            this.lblSendingUser.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblSendingUser.Name = "lblSendingUser";
-            this.lblSendingUser.Size = new System.Drawing.Size(234, 15);
+            this.lblSendingUser.Size = new System.Drawing.Size(583, 41);
             this.lblSendingUser.TabIndex = 1;
             this.lblSendingUser.Text = "Sender (Numeric) or \"System\" (Mandatory)";
             // 
             // lblMessageType
             // 
             this.lblMessageType.AutoSize = true;
-            this.lblMessageType.Location = new System.Drawing.Point(28, 157);
+            this.lblMessageType.Location = new System.Drawing.Point(68, 429);
+            this.lblMessageType.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblMessageType.Name = "lblMessageType";
-            this.lblMessageType.Size = new System.Drawing.Size(201, 15);
+            this.lblMessageType.Size = new System.Drawing.Size(505, 41);
             this.lblMessageType.TabIndex = 2;
             this.lblMessageType.Text = "Message Type (Numeric, Mandatory)";
             // 
             // lblMessageText
             // 
             this.lblMessageText.AutoSize = true;
-            this.lblMessageText.Location = new System.Drawing.Point(28, 206);
+            this.lblMessageText.Location = new System.Drawing.Point(68, 563);
+            this.lblMessageText.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblMessageText.Name = "lblMessageText";
-            this.lblMessageText.Size = new System.Drawing.Size(171, 15);
+            this.lblMessageText.Size = new System.Drawing.Size(430, 41);
             this.lblMessageText.TabIndex = 3;
             this.lblMessageText.Text = "Message Text (String, Optional)";
             // 
             // lblGameID
             // 
             this.lblGameID.AutoSize = true;
-            this.lblGameID.Location = new System.Drawing.Point(28, 255);
+            this.lblGameID.Location = new System.Drawing.Point(68, 697);
+            this.lblGameID.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblGameID.Name = "lblGameID";
-            this.lblGameID.Size = new System.Drawing.Size(157, 15);
+            this.lblGameID.Size = new System.Drawing.Size(391, 41);
             this.lblGameID.TabIndex = 4;
             this.lblGameID.Text = "Game ID (numeric, optional)";
             // 
             // lblMessagePriority
             // 
             this.lblMessagePriority.AutoSize = true;
-            this.lblMessagePriority.Location = new System.Drawing.Point(28, 304);
+            this.lblMessagePriority.Location = new System.Drawing.Point(68, 831);
+            this.lblMessagePriority.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.lblMessagePriority.Name = "lblMessagePriority";
-            this.lblMessagePriority.Size = new System.Drawing.Size(212, 15);
+            this.lblMessagePriority.Size = new System.Drawing.Size(536, 41);
             this.lblMessagePriority.TabIndex = 5;
             this.lblMessagePriority.Text = "Message Priority (1,2 or 3 - Mandatory)";
             // 
             // textBoxWhoTo
             // 
-            this.textBoxWhoTo.Location = new System.Drawing.Point(304, 56);
+            this.textBoxWhoTo.Location = new System.Drawing.Point(738, 153);
+            this.textBoxWhoTo.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxWhoTo.Name = "textBoxWhoTo";
-            this.textBoxWhoTo.Size = new System.Drawing.Size(100, 23);
+            this.textBoxWhoTo.Size = new System.Drawing.Size(237, 47);
             this.textBoxWhoTo.TabIndex = 6;
-            this.textBoxWhoTo.Text = "email seed@mail.com, text 4254401381";
+            this.textBoxWhoTo.Text = "email seed@mail.com";
             // 
             // textBoxSender
             // 
-            this.textBoxSender.Location = new System.Drawing.Point(304, 105);
+            this.textBoxSender.Location = new System.Drawing.Point(738, 287);
+            this.textBoxSender.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxSender.Name = "textBoxSender";
-            this.textBoxSender.Size = new System.Drawing.Size(100, 23);
+            this.textBoxSender.Size = new System.Drawing.Size(237, 47);
             this.textBoxSender.TabIndex = 7;
             this.textBoxSender.Text = "12345";
             // 
             // textBoxMessageType
             // 
-            this.textBoxMessageType.Location = new System.Drawing.Point(304, 154);
+            this.textBoxMessageType.Location = new System.Drawing.Point(738, 421);
+            this.textBoxMessageType.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxMessageType.Name = "textBoxMessageType";
-            this.textBoxMessageType.Size = new System.Drawing.Size(100, 23);
+            this.textBoxMessageType.Size = new System.Drawing.Size(237, 47);
             this.textBoxMessageType.TabIndex = 8;
             this.textBoxMessageType.Text = "1";
             // 
             // textBoxMessageText
             // 
-            this.textBoxMessageText.Location = new System.Drawing.Point(304, 203);
+            this.textBoxMessageText.Location = new System.Drawing.Point(738, 555);
+            this.textBoxMessageText.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxMessageText.Name = "textBoxMessageText";
-            this.textBoxMessageText.Size = new System.Drawing.Size(100, 23);
+            this.textBoxMessageText.Size = new System.Drawing.Size(237, 47);
             this.textBoxMessageText.TabIndex = 9;
-            this.textBoxMessageText.Text = "This is a test message";
+            this.textBoxMessageText.Text = "This is a test of the text";
             // 
             // textBoxGameID
             // 
-            this.textBoxGameID.Location = new System.Drawing.Point(304, 252);
+            this.textBoxGameID.Location = new System.Drawing.Point(738, 689);
+            this.textBoxGameID.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxGameID.Name = "textBoxGameID";
-            this.textBoxGameID.Size = new System.Drawing.Size(100, 23);
+            this.textBoxGameID.Size = new System.Drawing.Size(237, 47);
             this.textBoxGameID.TabIndex = 10;
             this.textBoxGameID.Text = "54321";
             // 
             // textBoxMessagePriority
             // 
-            this.textBoxMessagePriority.Location = new System.Drawing.Point(304, 301);
+            this.textBoxMessagePriority.Location = new System.Drawing.Point(738, 823);
+            this.textBoxMessagePriority.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.textBoxMessagePriority.Name = "textBoxMessagePriority";
-            this.textBoxMessagePriority.Size = new System.Drawing.Size(100, 23);
+            this.textBoxMessagePriority.Size = new System.Drawing.Size(237, 47);
             this.textBoxMessagePriority.TabIndex = 11;
             this.textBoxMessagePriority.Text = "1";
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(55, 379);
+            this.btnOK.Location = new System.Drawing.Point(134, 1036);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(182, 63);
             this.btnOK.TabIndex = 12;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -159,17 +172,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(88, 74);
+            this.label1.Location = new System.Drawing.Point(214, 202);
+            this.label1.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(216, 15);
+            this.label1.Size = new System.Drawing.Size(536, 41);
             this.label1.TabIndex = 13;
             this.label1.Text = "Prefix each with \"email\", \"text\" or \"app\"";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 41F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1943, 1230);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.textBoxMessagePriority);
@@ -184,6 +198,7 @@
             this.Controls.Add(this.lblMessageType);
             this.Controls.Add(this.lblSendingUser);
             this.Controls.Add(this.lblToPeople);
+            this.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
